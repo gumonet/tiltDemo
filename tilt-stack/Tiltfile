@@ -1,8 +1,16 @@
 #default_registry('your-docker-registry.local')  # si no usas registry, omite esto
 
 #Server 1
+local_resource(
+    'generate-webserver1-configmap',
+    'kubectl create configmap webserver1-config-files --from-file=.env=../applications/server1/config/.env --from-file=secrets.env=../applications/server1/config/secrets.env --namespace=webserver1 --dry-run=client -o yaml > app_definitions/webserver1-configmap.yaml',
+    deps=[
+        '../applications/server1/config/.env',
+        '../applications/server1/config/secrets.env'
+    ]
+)
 docker_build('webserver1','../applications/server1/')
-k8s_yaml('app_definitions/webserver1.yaml')
+k8s_yaml(['app_definitions/webserver1.yaml', 'app_definitions/webserver1-configmap.yaml'])
 k8s_resource('webserver1', port_forwards=8085)
 
 #Server 2

@@ -25,9 +25,20 @@ spec:
           image: webserver1:latest # This name and tag is defined in the Tiltfile
           ports:
             - containerPort: 80
+          volumeMounts:
+            - name: config-files
+              mountPath: /app/config/.env
+              subPath: .env
+            - name: config-files
+              mountPath: /app/config/secrets.env
+              subPath: secrets.env
           env:
             - name: CLUSTER_NAME
               value: "webserver1"
+      volumes:
+        - name: config-files
+          configMap:
+            name: webserver1-config-files
 ---
 apiVersion: v1
 kind: Service

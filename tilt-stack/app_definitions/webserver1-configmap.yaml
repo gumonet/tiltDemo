@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  .env: hello
+  secrets.env: Hello secretes
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: webserver1-config-files
+  namespace: webserver1
